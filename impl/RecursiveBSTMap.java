@@ -193,6 +193,11 @@ public abstract class RecursiveBSTMap<K extends Comparable<K>, V, N extends Recu
          * rebalancing that it triggers.
          */
         public NN put(KK key, VV val) {
+        	/*
+        	System.out.println("this.key = " + this.key);
+        	System.out.println("key = " + key);
+        	*/
+
             int compare = key.compareTo(this.key);
             if (compare < 0)
                 left = left.put(key, val);
@@ -200,7 +205,9 @@ public abstract class RecursiveBSTMap<K extends Comparable<K>, V, N extends Recu
                 this.value = val;
             else // if (compare > 0) 
                 right = right.put(key, val);
-            return putFixup();
+
+            NN ret = putFixup();
+            return ret;
         }
    
         /**
