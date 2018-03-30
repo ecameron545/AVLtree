@@ -51,12 +51,10 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 		 */
 		public RBNode<K, V> putFixup() {
 			TradRBRealNode current = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) this;
-			
-			
-			// possible violation on right side
+
+			// red node on right side
 			if (current.right().isRed()) {
-				
-				
+
 				// right-left red violation
 				if (current.right().left().isRed()) {
 					TradRBRealNode oldRight = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) current.right();
@@ -66,10 +64,9 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 					newRight.right = oldRight;
 					current.right = newRight;
 				}
-				
+
 				// right-right red violation
 				if (current.right().right().isRed()) {
-					
 
 					// right-right violation with black uncle
 					if (!current.left().isRed()) {
@@ -86,33 +83,30 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 						current.right.recomputeBlackHeight();
 						current.recomputeBlackHeight();
 					}
-
-					// right-left red violation
 				}
+			}
 
-				// possible violation on left side
-			} else if (current.left().isRed()) {
-				
+			// red node on left side
+			if (current.left().isRed()) {
+
 				// left-right violation
 				if (current.left().right().isRed()) {
 					TradRBRealNode oldLeft = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) current.left();
 					TradRBRealNode newLeft = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) oldLeft.right();
 
 					oldLeft.right = newLeft.left();
-					newLeft.left = oldLeft;	
+					newLeft.left = oldLeft;
 					current.left = newLeft;
 				}
-				
-				
+
 				// left-left red violation
 				if (current.left().left().isRed()) {
-
-					// right-right violation with black uncle
+					// left-left violation with black uncle
 					if (!current.right().isRed()) {
 						current = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) rotateRight();
 					}
 
-					// right-right violation with red uncle
+					// left-left violation with red uncle
 					if (current.right().isRed()) {
 						// just switch colors of current and its two children
 						current.redden();
@@ -122,9 +116,7 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 						current.right.recomputeBlackHeight();
 						current.recomputeBlackHeight();
 					}
-
-					// left-right red violation
-				} 
+				}
 			}
 			return current;
 		}
@@ -139,20 +131,16 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 		 * @return The node that is newly the root
 		 */
 		private RBNode<K, V> rotateLeft() {
-			
-			
-			// make sure this is a double red with a black uncle
-			assert (right().isRed() && right().right().isRed());
-			assert (!left().isRed());
-
 			TradRBRealNode oldTop = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) this;
 			TradRBRealNode newTop = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) oldTop.right();
 
+			// rotate the tree to the left
 			oldTop.right = newTop.left();
 			newTop.left = oldTop;
 			newTop.blacken();
 			oldTop.redden();
 
+			// return the new subtree's root
 			return newTop;
 		}
 
@@ -162,18 +150,16 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 		 * @return The node that is newly the root
 		 */
 		private RBNode<K, V> rotateRight() {
-			// make sure this is a double red with a black uncle
-			assert (left().isRed() && left().left().isRed());
-			assert (!right().isRed());
-
 			TradRBRealNode oldTop = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) this;
 			TradRBRealNode newTop = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) oldTop.left();
 
+			// rotate the tree to the right
 			oldTop.left = newTop.right();
 			newTop.right = oldTop;
 			newTop.blacken();
 			oldTop.redden();
-			
+
+			// return the new subtree's root
 			return newTop;
 		}
 	}
