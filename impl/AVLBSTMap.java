@@ -114,11 +114,11 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 		public AVLNode<K, V> putFixup() {
 
 			// current node
-			AVLRealNode replace = this;
+			AVLRealNode current = this;
 			// balance
 			int bal = left.height() - right.height();
 
-			// violation on the right of the current node (replace)
+			// violation on the right of the current node
 			if (bal == -2) {
 
 				// right-left violation
@@ -129,39 +129,36 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 					// left child of rChild
 					AVLRealNode rlChild = (AVLBSTMap<K, V>.AVLRealNode) rChild.left;
 
-					// fix up the right-left imbalance into a right-right
-					// imbalance
+					// fix up the right-left imbalance into a right-right imbalance
 					rChild.left = rlChild.right();
 					rlChild.right = rChild;
-					replace.right = rlChild;
+					current.right = rlChild;
 
 					// rlChild is the new right child to replace so thats why I
-					// use rlChild
-					// rather than rChild when fixing up a right-right violation
-					// right after
-					// a right-left violation
-					replace.right = rlChild.left();
-					rlChild.left = replace;
-					replace = rlChild;
-					replace.right.recompute();
-					replace.left.recompute();
+					// use rlChild rather than rChild when fixing up a right-right violation
+					// right after a right-left violation
+					current.right = rlChild.left();
+					rlChild.left = current;
+					current = rlChild;
+					current.right.recompute();
+					current.left.recompute();
 
 				}
 
 				// right-right violation
 				else if (right.balance() < 0) {
 
-					// right child to the current node replace
+					// right child to the current node
 					AVLRealNode rChild = (AVLBSTMap<K, V>.AVLRealNode) right;
-					replace.right = rChild.left();
-					rChild.left = replace;
-					replace = rChild;
+					current.right = rChild.left();
+					rChild.left = current;
+					current = rChild;
 
-					// recompute the left node which use to be replace
-					replace.left.recompute();
+					// recompute the left node which use to be current
+					current.left.recompute();
 				}
 
-				// violation on the left of the current node (replace)
+			// violation on the left of the current node
 			} else if (bal == 2) {
 
 				// left-right violation
@@ -172,42 +169,39 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 					// right child of lChild
 					AVLRealNode lrChild = (AVLBSTMap<K, V>.AVLRealNode) lChild.right();
 
-					// fix up the left-right imbalance into a left-left
-					// imbalance
+					// fix up the left-right imbalance into a left-left imbalance
 					lChild.right = lrChild.left();
 					lrChild.left = lChild;
-					replace.left = lrChild;
+					current.left = lrChild;
 
 					// lrChild is the new left child to replace so thats why I
-					// use lrChild
-					// rather than lChild when fixing up a left-left violation
-					// right after
-					// a left-right violation
-					replace.left = lrChild.right();
-					lrChild.right = replace;
-					replace = lrChild;
-					replace.left.recompute();
-					replace.right.recompute();
+					// use lrChild rather than lChild when fixing up a left-left violation
+					// right after a left-right violation
+					current.left = lrChild.right();
+					lrChild.right = current;
+					current = lrChild;
+					current.left.recompute();
+					current.right.recompute();
 
 				}
 
 				// left-left violation
 				else if (left.balance() > 0) {
 
-					// left child to the current node replace
+					// left child to the current node
 					AVLRealNode lChild = (AVLBSTMap<K, V>.AVLRealNode) left;
-					replace.left = lChild.right();
-					lChild.right = replace;
-					replace = lChild;
+					current.left = lChild.right();
+					lChild.right = current;
+					current = lChild;
 
-					// recompute the right node which use to be replace
-					replace.right.recompute();
+					// recompute the right node which use to be current
+					current.right.recompute();
 				}
 			}
 
 			// recompute and return
-			replace.recompute();
-			return replace;
+			current.recompute();
+			return current;
 		}
 
 		/**
